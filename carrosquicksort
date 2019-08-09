@@ -1,0 +1,75 @@
+carro[] carrito = new carro[10]; 
+
+int y;
+
+void setup() {
+  fullScreen();
+  inicializar();
+}
+
+void draw() {
+  background(175);
+//LINEAS DE DIVISION DE LA PISTA
+  for (int y = 0; y<height; y+=height/carrito.length) {
+    line(0, y, width, y);
+  }
+//DIBUJO DE META CUADRICULADA
+  fill(255);
+  rectMode(CORNER);
+  rect(width-25, 0, 10, height);
+
+  for (int a = 0; a<height; a+=10) {
+    fill(0);
+    rect(width-20, a, 5, 5);
+  }
+  for (int a = 5; a<height; a+=10) {
+    fill(0);
+    rect(width-25, a, 5, 5);
+  }
+//INICIO EL OBJETO CREADO (CARRO) Y SU MOVIMIENTO
+  for (int i = 0; i<carrito.length; i++) {
+    carrito[i].mostrar();
+    carrito[i].mover();
+  }
+//CLICK AL MOUSE Y ORDENAMIENTO 
+  if(mousePressed){
+  quickSort(carrito, 0, carrito.length-1);
+  }
+}
+//INICIALIZO MI VECTOR (CARRITO)
+void inicializar()
+{
+  for (int i = 0; i <carrito.length; i++){
+    carrito[i] = new carro(0, height/carrito.length*i+30, 100, 30);
+  }
+}
+//APLICO ORDENAMIENTO QUICKSORT
+void quickSort(carro arr[], int begin, int end) {
+  
+  if (begin < end) {
+    int partitionIndex = partition(arr, begin, end);
+
+    quickSort(arr, begin, partitionIndex-1);
+    quickSort(arr, partitionIndex+1, end);
+  }
+}
+ int partition(carro arr[], int begin, int end) {
+  float pivot = arr[end].velocidad;
+  int i = (begin-1);
+
+  for (int j = begin; j < end; j++) {
+    if (arr[j].velocidad <= pivot) {
+      i++;
+
+      float swapTemp = arr[i].velocidad;
+      arr[i].velocidad = arr[j].velocidad;
+      arr[j].velocidad = swapTemp;
+    }
+  }
+
+  float swapTemp = arr[i+1].velocidad;
+  arr[i+1].velocidad = arr[end].velocidad;
+  arr[end].velocidad = swapTemp;
+
+  return i+1;
+}
